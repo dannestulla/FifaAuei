@@ -2,7 +2,7 @@ export interface HotmartResponse {
     items: Item[]
   }
   
-  interface Item {
+  export interface Item {
     purchase: Purchase
   }
 
