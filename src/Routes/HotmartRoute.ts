@@ -1,9 +1,13 @@
-import {Router } from "express";
-import * as HotmartController from "../Controllers/HotmartController";
+import { Router } from "express";
 const router: Router = Router();
+import * as HotmartController from "../Controllers/HotmartController";
 
-router.get("/getSales", (req, res) => {
-    res.send(HotmartController.getSales)
-})
 
-export default Router;
+router.use((req, res, next) => {
+    console.log('Time: ', Date.now())
+    next()
+  });
+
+router.post("/getSales", HotmartController.getSales);
+
+export default router;

@@ -1,16 +1,18 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import HotmartRoute from "./Routes/HotmartRoute";
+import birds from './Routes/birds';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
-app.use("/getSales", HotmartRoute);
+app.use("/hotmart", HotmartRoute);
 
+app.use("/birds", birds);
 
-app.use((error: any, res: Response, next: NextFunction) => {
+/* app.use((error: any, res: Response, next: NextFunction) => {
   try {
     res.status(404).send("Resource not found");
   } catch (error) {
@@ -32,7 +34,8 @@ app.use((error: any, res: Response, next: NextFunction) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
+
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
