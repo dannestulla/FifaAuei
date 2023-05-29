@@ -1,7 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import HotmartRoute from "./Routes/HotmartRoute";
-import birds from './Routes/birds';
 
 dotenv.config();
 
@@ -9,8 +8,6 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 app.use("/hotmart", HotmartRoute);
-
-app.use("/birds", birds);
 
 app.use((error: any, res: Response, next: NextFunction) => {
   try {
