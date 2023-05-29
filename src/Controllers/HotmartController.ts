@@ -12,9 +12,8 @@ export const getSales = async (
 ) => {
     const request = req.query as unknown as HotmarRequest
     const token = await authUser(request)
-    let mockDate = new Date()
-    mockDate.setDate(5)
-    const day = HotmartUseCase.getCurrentDayMilisec(mockDate)
+    const date = new Date(request.date)
+    const day = HotmartUseCase.getCurrentDayMilisec(date)
     const response = await fetchUrl(token.access_token, day[0], day[1]) as HotmartResponse
     const total = HotmartUseCase.comissionCalc(response.items)
     res.send(total)
