@@ -6,20 +6,11 @@ import birds from './Routes/birds';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 
 app.use("/hotmart", HotmartRoute);
 
 app.use("/birds", birds);
-
-/* app.use((error: any, res: Response, next: NextFunction) => {
-  try {
-    res.status(404).send("Resource not found");
-  } catch (error) {
-    next(error);
-  }
-});
-
 
 app.use((error: any, res: Response, next: NextFunction) => {
   try {
@@ -34,7 +25,13 @@ app.use((error: any, res: Response, next: NextFunction) => {
   } catch (error) {
     next(error);
   }
-}); */
+}); 
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:8000/");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
 app.listen(port, () => {
