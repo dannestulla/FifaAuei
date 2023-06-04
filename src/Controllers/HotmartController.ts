@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { HotmarRequest } from '../Models/HotmarRequest';
-import { HotmartResponse } from '../Models/HotmartResponse';
-import { HotmartToken } from "../Models/HotmartToken";
+import { HotmarRequest } from '../Models/HotmartModel/HotmarRequest';
+import { HotmartResponse } from '../Models/HotmartModel/HotmartResponse';
+import { HotmartToken } from "../Models/HotmartModel/HotmartToken";
 import { HotmartUseCase } from "../UseCases/Hotmart";
 import axios from 'axios';
 

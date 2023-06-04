@@ -1,4 +1,4 @@
-import { HotmartResponse, Item } from "../Models/HotmartResponse";
+import { HotmartResponse, Item } from "../Models/HotmartModel/HotmartResponse";
 
 export class HotmartUseCase {
   static comissionCalc = (items: Item[]) => {
@@ -42,10 +42,6 @@ export class HotmartUseCase {
       sum += comissionValue
     });
 
-    // var reais = Intl.NumberFormat ('pt-br', {
-    // style: 'currency', 
-    // currency: 'BRL'});
-    // reais.format(sum.toFixed(2))
     return sum.toFixed(2).replace(".", ",")
   }
 

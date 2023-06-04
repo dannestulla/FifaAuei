@@ -1,6 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import HotmartRoute from "./Routes/HotmartRoute";
+import FacebookRoute from "./Routes/FacebookRoute"
 
 dotenv.config();
 
@@ -8,6 +9,8 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 app.use("/hotmart", HotmartRoute);
+
+app.use("/facebook", FacebookRoute);
 
 app.use((error: any, res: Response, next: NextFunction) => {
   try {
