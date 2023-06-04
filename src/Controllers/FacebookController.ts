@@ -13,8 +13,8 @@ export const getAds = async (
     const request = req.query as unknown as FacebookRequest
 
     // mock date para testes
-    
-    const timeRange = createDate(request.date)
+    const date = new Date(request.date)
+    const timeRange = createDate(date)
     const adsTotal = await fetchUrl(request, timeRange)
     console.log(adsTotal)
     const adsSpent = await adsTotal as FacebookResponse
