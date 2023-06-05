@@ -16,7 +16,8 @@ export const getSales = async (
     const day = HotmartUseCase.getCurrentDayMilisec(date)
     const response = await fetchUrl(token.access_token, day[0], day[1]) as HotmartResponse
     if (HotmartUseCase.isForeignCurrency(response.items)) {
-        res.send("Faça o cálculo manualmente") // Compra com moeda estrangeira 
+        res.send("Faça o cálculo manualmente")
+        return 
     }
     const total = HotmartUseCase.comissionCalc(response.items)
     res.send(total)
