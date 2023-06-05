@@ -50,22 +50,13 @@ export const fetchUrl = async (token: string, start_date: number, end_date: numb
             Authorization: "Bearer " + token
         }
     }).then(function (response) {
-        console.log("Fetch OK: "+ response.data.toString())
+        console.log("Fetch OK: " + response.data.toString())
         return response.data
     }).catch(function (error) {
-        console.log("error :" +error )
+        console.log("error :" + error)
         return error
     });
 };
 
-export const isForeignCurrency = (items: Item[]) : boolean => {
-    let isForeign = false
-    for (const itemSelected in items) {
-        if ((itemSelected as unknown as Item).purchase.price.currency_code != "BRL" ) {
-            console.log("currency code" + (itemSelected as unknown as Item).purchase.price.currency_code)
-            isForeign = true
-        }
-    }
-    return isForeign
-}
+
 

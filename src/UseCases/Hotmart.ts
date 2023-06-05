@@ -45,7 +45,7 @@ export class HotmartUseCase {
     return sum.toFixed(2).replace(".", ",")
   }
 
-  static getCurrentDayMilisec(date : Date) {
+  static getCurrentDayMilisec(date: Date) {
     //date.setHours(0, 0, 0, 0)
     var startDateMilisec = date.valueOf()
     const oneDayMilisec = 86400000
@@ -53,7 +53,14 @@ export class HotmartUseCase {
     return [startDateMilisec, endDateMilisec]
   }
 
-  static isForeignCurrency(item: Item[]) : boolean {
-    return true
+  static isForeignCurrency = (items: Item[]): boolean => {
+    let isForeign = false
+    for (const itemSelected in items) {
+      if ((itemSelected as unknown as Item).purchase.price.currency_code != "BRL") {
+        console.log("currency code" + (itemSelected as unknown as Item).purchase.price.currency_code)
+        isForeign = true
+      }
+    }
+    return isForeign
   }
 }
