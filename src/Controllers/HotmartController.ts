@@ -62,6 +62,7 @@ export const isForeignCurrency = (items: Item[]) : boolean => {
     let isForeign = false
     for (const itemSelected in items) {
         if ((itemSelected as unknown as Item).purchase.price.currency_code != "BRL" ) {
+            console.log("currency code" + (itemSelected as unknown as Item).purchase.price.currency_code)
             isForeign = true
         }
     }
