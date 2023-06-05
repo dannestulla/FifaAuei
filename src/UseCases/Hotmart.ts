@@ -1,4 +1,4 @@
-import { HotmartResponse, Item } from "../Models/HotmartModel/HotmartResponse";
+import { Item } from "../Models/HotmartModel/HotmartResponse";
 
 export class HotmartUseCase {
   static comissionCalc = (items: Item[]) => {
@@ -55,12 +55,11 @@ export class HotmartUseCase {
 
   static isForeignCurrency = (items: Item[]): boolean => {
     let isForeign = false
-    /*  for (const itemSelected in items) {
-      const itemTyped = (itemSelected as any) as Item
-      if (itemTyped.purchase.price.currency_code != "BRL") {
+      for (const itemSelected of items) {
+      if (itemSelected.purchase.price.currency_code != "BRL") {
         isForeign = true
       }
-    }  */
+    }  
     return isForeign
   }
 }

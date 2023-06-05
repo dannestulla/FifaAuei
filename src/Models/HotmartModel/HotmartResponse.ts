@@ -6,7 +6,7 @@ export interface HotmartResponse {
     purchase: Purchase
   }
 
-  export interface Purchase {
+  interface Purchase {
     payment: Payment
     hotmart_fee: HotmartFee
     recurrency_number: number
