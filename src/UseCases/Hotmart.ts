@@ -46,7 +46,7 @@ export class HotmartUseCase {
   }
 
   static getCurrentDayMilisec(date : Date) {
-    date.setHours(0, 0, 0, 0)
+    //date.setHours(0, 0, 0, 0)
     var startDateMilisec = date.valueOf()
     const oneDayMilisec = 86400000
     var endDateMilisec = startDateMilisec + oneDayMilisec
