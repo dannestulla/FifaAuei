@@ -58,13 +58,13 @@ export const fetchUrl = async (token: string, start_date: number, end_date: numb
     });
 };
 
-export const isForeignCurrency = (items: Item[]) => {
+export const isForeignCurrency = (items: Item[]) : boolean => {
+    let isForeign = false
     for (const itemSelected in items) {
         if ((itemSelected as unknown as Item).purchase.price.currency_code != "BRL" ) {
-            return true
-        } else {
-            return false
+            isForeign = true
         }
     }
+    return isForeign
 }
 
