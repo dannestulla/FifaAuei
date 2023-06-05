@@ -55,12 +55,12 @@ export class HotmartUseCase {
 
   static isForeignCurrency = (items: Item[]): boolean => {
     let isForeign = false
-     for (const itemSelected in items) {
+    /*  for (const itemSelected in items) {
       const itemTyped = (itemSelected as any) as Item
       if (itemTyped.purchase.price.currency_code != "BRL") {
         isForeign = true
       }
-    } 
+    }  */
     return isForeign
   }
 }
