@@ -16,7 +16,6 @@ export const getAds = async (
     const date = new Date(request.date)
     const timeRange = createDate(date)
     const adsTotal = await fetchUrl(request, timeRange)
-    console.log(adsTotal)
     const adsSpent = await adsTotal as FacebookResponse
     res.send(adsSpent.data[0].spend)
 };
