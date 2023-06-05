@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HotmarRequest } from '../Models/HotmartModel/HotmarRequest';
-import { HotmartResponse } from '../Models/HotmartModel/HotmartResponse';
+import { HotmartResponse, Item } from '../Models/HotmartModel/HotmartResponse';
 import { HotmartToken } from "../Models/HotmartModel/HotmartToken";
 import { HotmartUseCase } from "../UseCases/Hotmart";
 import axios from 'axios';
@@ -15,6 +15,9 @@ export const getSales = async (
     const date = new Date(request.date)
     const day = HotmartUseCase.getCurrentDayMilisec(date)
     const response = await fetchUrl(token.access_token, day[0], day[1]) as HotmartResponse
+    if (HotmartUseCase.isForeignCurrency(response.items)) {
+        res.send("Faça o cálculo manualmente") // Compra com moeda estrangeira 
+    }
     const total = HotmartUseCase.comissionCalc(response.items)
     res.send(total)
 };
@@ -55,4 +58,13 @@ export const fetchUrl = async (token: string, start_date: number, end_date: numb
     });
 };
 
+export const isForeignCurrency = (items: Item[]) => {
+    for (const itemSelected in items) {
+        if ((itemSelected as unknown as Item).purchase.price.currency_code != "BRL" ) {
+            return true
+        } else {
+            return false
+        }
+    }
+}
 

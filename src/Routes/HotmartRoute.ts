@@ -10,4 +10,8 @@ router.use((req, res, next) => {
 
 router.post("/getSales", HotmartController.getSales);
 
+router.get("/getMethod", HotmartController.getMethod);
+
+router.get("/getSchool", HotmartController.getSchool);
+
 export default router;

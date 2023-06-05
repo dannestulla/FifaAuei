@@ -52,4 +52,8 @@ export class HotmartUseCase {
     var endDateMilisec = startDateMilisec + oneDayMilisec
     return [startDateMilisec, endDateMilisec]
   }
+
+  static isForeignCurrency(item: Item[]) : boolean {
+    return true
+  }
 }
