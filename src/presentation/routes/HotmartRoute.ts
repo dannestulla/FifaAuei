@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router: Router = Router();
-import * as HotmartController from "../Controllers/HotmartController";
+import * as HotmartController from "../controllers/HotmartController";
 
 
 router.use((req, res, next) => {
@@ -10,8 +10,8 @@ router.use((req, res, next) => {
 
 router.post("/getSales", HotmartController.getSales);
 
-//router.get("/getMethod", HotmartController.getMethod);
+router.get("/getMethod", HotmartController.getMethod);
 
-//router.get("/getSchool", HotmartController.getSchool);
+router.get("/getSchool", HotmartController.getSchool);
 
 export default router;

@@ -4,6 +4,7 @@ export interface HotmartResponse {
   
   export interface Item {
     purchase: Purchase
+    product: Product
   }
 
   interface Purchase {
@@ -12,6 +13,10 @@ export interface HotmartResponse {
     recurrency_number: number
     order_date: number
     price: Price
+  }
+
+  interface Product {
+    name: string
   }
   
   interface Payment {

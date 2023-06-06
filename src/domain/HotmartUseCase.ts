@@ -1,4 +1,4 @@
-import { Item } from "../Models/HotmartModel/HotmartResponse";
+import { Item } from "../data/model/hotmart/HotmartResponse";
 
 export class HotmartUseCase {
   static comissionCalc = (items: Item[]) => {
@@ -46,7 +46,6 @@ export class HotmartUseCase {
   }
 
   static getCurrentDayMilisec(date: Date) {
-    //date.setHours(0, 0, 0, 0)
     var startDateMilisec = date.valueOf()
     const oneDayMilisec = 86400000
     var endDateMilisec = startDateMilisec + oneDayMilisec
@@ -55,11 +54,31 @@ export class HotmartUseCase {
 
   static isForeignCurrency = (items: Item[]): boolean => {
     let isForeign = false
-      for (const itemSelected of items) {
+    for (const itemSelected of items) {
       if (itemSelected.purchase.price.currency_code != "BRL") {
         isForeign = true
       }
-    }  
+    }
     return isForeign
+  }
+
+  static getMethodSold = (items: Item[]): number => {
+    let methodSold = 0
+    for (const itemSelected of items) {
+      if (itemSelected.product.name == "MÉTODO AUEI - FIFA AUEI") {
+        methodSold++
+      }
+    }
+    return methodSold
+  }
+
+  static getSchoolsSold = (items: Item[]): number => {
+    let schoolsSold = 0
+    for (const itemSelected of items) {
+      if (itemSelected.product.name == "ESCOLA FIFA AUEI 2.0") {
+        schoolsSold++
+      }
+    }
+    return schoolsSold
   }
 }

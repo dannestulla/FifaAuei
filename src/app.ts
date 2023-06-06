@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import HotmartRoute from "./Routes/HotmartRoute";
-import FacebookRoute from "./Routes/FacebookRoute"
+import HotmartRoute from "./presentation/routes/HotmartRoute";
+import FacebookRoute from "./presentation/routes/FacebookRoute"
 
 dotenv.config();
 
