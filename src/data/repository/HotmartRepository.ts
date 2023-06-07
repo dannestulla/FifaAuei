@@ -1,3 +1,4 @@
+import { NextFunction } from "express";
 import { getAuthParams } from "../../presentation/controllers/HotmartController";
 import { HotmarRequest } from "../model/hotmart/HotmarRequest";
 import { HotmartResponse } from "../model/hotmart/HotmartResponse";
@@ -5,7 +6,7 @@ import { HotmartToken } from "../model/hotmart/HotmartToken";
 import axios from 'axios';
 
 
-export const getToken = async (request: HotmarRequest): Promise<HotmartToken> => {
+export const getToken = async (request: HotmarRequest, next: NextFunction): Promise<HotmartToken> => {
     return axios.post('https://api-sec-vlc.hotmart.com/security/oauth/token', null, {
         params: {
             grant_type: "client_credentials",
@@ -19,8 +20,7 @@ export const getToken = async (request: HotmarRequest): Promise<HotmartToken> =>
         console.log("Hotmart OK")
         return response.data
     }).catch(function (error) {
-        console.log("Hotmart error: " + error.response)
-        return error
+        next(error)
     });
 };
 
