@@ -16,10 +16,10 @@ export const getToken = async (request: HotmarRequest): Promise<HotmartToken> =>
             Authorization: request.authorization
         }
     }).then(function (response) {
-        console.log("OK auth")
+        console.log("Hotmart OK")
         return response.data
     }).catch(function (error) {
-        console.log("Error status code: " + error.response)
+        console.log("Hotmart error: " + error.response)
         return error
     });
 };
@@ -34,10 +34,10 @@ export const fetchUrl = async (token: string, dayStart : number, dayEnd: number)
             Authorization: "Bearer " + token
         }
     }).then(function (response) {
-        console.log("Fetch OK: " + response.data.toString())
+        console.log("Hotmart fetchUrl Ok: " + response.data.toString())
         return response.data
     }).catch(function (error) {
-        console.log("error :" + error)
+        console.log("Hotmart fetchUrl error :" + error.response)
         return error
     });
 };
