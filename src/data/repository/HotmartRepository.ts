@@ -20,6 +20,7 @@ export const getToken = async (request: HotmarRequest, next: NextFunction): Prom
         console.log("Hotmart OK")
         return response.data
     }).catch(function (error) {
+        console.log("Hotmart token error :" + error.response)
         next(error)
     });
 };

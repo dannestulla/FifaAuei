@@ -3,5 +3,4 @@ export interface HotmarRequest {
     client_secret: string,
     authorization: string,
     date: Date,
-    
 }
