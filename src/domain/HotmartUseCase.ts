@@ -62,23 +62,31 @@ export class HotmartUseCase {
     return isForeign
   }
 
-  static getMethodSold = (items: Item[]): number => {
+  static getMethodSold = (items: Item[]): string => {
     let methodSold = 0
     for (const itemSelected of items) {
       if (itemSelected.product.name == "MÉTODO AUEI - FIFA AUEI") {
         methodSold++
       }
     }
-    return methodSold
+    if (methodSold == 0) {
+      return ""
+    } else {
+      return methodSold.toString()
+    }
   }
 
-  static getSchoolsSold = (items: Item[]): number => {
+  static getSchoolsSold = (items: Item[]): string => {
     let schoolsSold = 0
     for (const itemSelected of items) {
       if (itemSelected.product.name == "ESCOLA FIFA AUEI 2.0") {
         schoolsSold++
       }
     }
-    return schoolsSold
+    if (schoolsSold == 0) {
+      return ""
+    } else {
+      return schoolsSold.toString()
+    }
   }
 }

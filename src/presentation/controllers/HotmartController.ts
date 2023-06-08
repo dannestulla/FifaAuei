@@ -34,7 +34,7 @@ export const getMethod = async (req: Request,
     const [token, dayStart, dayEnd] = await getAuthParams(req, next)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const methodsSold = HotmartUseCase.getMethodSold(response.items)
-    res.status(200).send(methodsSold)
+    res.send(methodsSold)
 }
 
 // Verifica quantas ESCOLA FIFA AUEI 2.0 foram vendidos no dia
@@ -45,5 +45,5 @@ export const getSchool = async (req: Request,
     const [token, dayStart, dayEnd] = await getAuthParams(req, next)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const schoolsSold = HotmartUseCase.getSchoolsSold(response.items)
-    res.status(200).send(schoolsSold)
+    res.send(schoolsSold)
 }
