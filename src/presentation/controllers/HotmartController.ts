@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { HotmarRequest } from '../../data/model/hotmart/HotmarRequest';
-import { HotmartResponse } from '../../data/model/hotmart/HotmartResponse';
 import { HotmartUseCase } from "../../domain/HotmartUseCase";
 import { getToken, fetchUrl } from '../../data/repository/HotmartRepository';
 
@@ -35,7 +34,7 @@ export const getMethod = async (req: Request,
     const [token, dayStart, dayEnd] = await getAuthParams(req, next)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const methodsSold = HotmartUseCase.getMethodSold(response.items)
-    res.send(methodsSold)
+    res.status(200).send(methodsSold)
 }
 
 // Verifica quantas ESCOLA FIFA AUEI 2.0 foram vendidos no dia
@@ -46,5 +45,5 @@ export const getSchool = async (req: Request,
     const [token, dayStart, dayEnd] = await getAuthParams(req, next)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const schoolsSold = HotmartUseCase.getSchoolsSold(response.items)
-    res.send(schoolsSold)
+    res.status(200).send(schoolsSold)
 }
