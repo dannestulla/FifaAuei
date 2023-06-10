@@ -2,12 +2,12 @@ import { HotmartResponse, Item } from "../data/model/hotmart/HotmartResponse";
 
 export class HotmartUseCase {
 
-  static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): number[] {
+  static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): string[][] {
     let salesInAMonth: number[] = []
     let salesInADay: number = 0
     let currentDay: number = firstDayOfMonth
     const oneDayMilisec = 86400000
-     
+
     for (const item of response.items) {
       if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
         salesInADay += this.getComission(item)
@@ -18,7 +18,18 @@ export class HotmartUseCase {
         salesInADay += this.getComission(item)
       }
     }
-    return salesInAMonth
+    const twoDimensions = this.transformInTwoDimensions(salesInAMonth)
+    return twoDimensions
+  }
+
+  static transformInTwoDimensions(salesInAMonth: number[]) {
+    let list = []
+    for (const sale of salesInAMonth) {
+      list.push([sale.toFixed(2), ""])
+    }
+    console.log("Lista: "+ list)
+    console.log("numeros na lista: "+ list.length)
+    return list
   }
 
   static getComission = (item: Item): number => {
