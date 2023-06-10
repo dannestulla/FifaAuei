@@ -25,7 +25,7 @@ export const getToken = async (request: HotmarRequest, next: NextFunction): Prom
     });
 };
 
-export const fetchUrl = async (token: string, dayStart : number, dayEnd: number): Promise<HotmartResponse> => {
+export const fetchUrl = async (token: string, dayStart : number, dayEnd?: number): Promise<HotmartResponse> => {
     return axios.get('https://developers.hotmart.com/payments/api/v1/sales/history', {
         params: {
             start_date: dayStart,

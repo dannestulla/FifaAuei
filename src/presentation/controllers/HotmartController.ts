@@ -1,29 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
 import { HotmarRequest } from '../../data/model/hotmart/HotmarRequest';
-import { HotmartUseCase } from "../../domain/HotmartUseCase";
+import { HotmartUseCase } from "../../domain/HotmartUseCases";
 import { getToken, fetchUrl } from '../../data/repository/HotmartRepository';
 
-export const getSales = async (
+export const getSalesInAMonth = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const [token, dayStart, dayEnd] = await getAuthParams(req, next)
+    const token = await getAuthParams(req, next)
+    const  [firstDayOfMonth, lastDayOfMonth] = HotmartUseCase.getMonthStart((req.query as any as HotmarRequest).date)
+    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
+    const listOfSales = HotmartUseCase.getSalesInAMonth(response, firstDayOfMonth)
+    res.send(listOfSales)
+}
+
+export const getSalesInADay = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const token = await getAuthParams(req, next)
+    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
     if (HotmartUseCase.isForeignCurrency(response.items)) {
         res.send("Faça o cálculo manualmente")
         return
     }
-    const total = HotmartUseCase.comissionCalc(response.items)
-    res.send(total)
+    let daySales = 0
+    for (const item of response.items) {
+        daySales += HotmartUseCase.getComission(item)
+    } 
+    res.send(daySales.toString())
 };
 
-export const getAuthParams = async (req: Request, next : NextFunction): Promise<[string, number, number]> => {
+export const getAuthParams = async (req: Request, next : NextFunction): Promise<string> => {
     const request = req.query as any as HotmarRequest
     const token = (await getToken(request, next)).access_token
-    const date = new Date(request.date)
-    const day = HotmartUseCase.getCurrentDayMilisec(date)
-    return [token, day[0], day[1]]
+    return token
 }
 
 // Verifica quantos Método Auei foram vendidos no dia
@@ -31,7 +45,8 @@ export const getMethod = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const [token, dayStart, dayEnd] = await getAuthParams(req, next)
+    const token = await getAuthParams(req, next)
+    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const methodsSold = HotmartUseCase.getMethodSold(response.items)
     res.send(methodsSold)
@@ -42,7 +57,8 @@ export const getSchool = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const [token, dayStart, dayEnd] = await getAuthParams(req, next)
+    const token = await getAuthParams(req, next)
+    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
     const schoolsSold = HotmartUseCase.getSchoolsSold(response.items)
     res.send(schoolsSold)

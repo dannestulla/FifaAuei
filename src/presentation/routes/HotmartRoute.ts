@@ -2,7 +2,9 @@ import { Router } from "express";
 const router: Router = Router();
 import * as HotmartController from "../controllers/HotmartController";
 
-router.post("/getSales", HotmartController.getSales);
+router.post("/getSalesInADay", HotmartController.getSalesInADay);
+
+router.post("/getSalesInAMonth", HotmartController.getSalesInAMonth);
 
 router.get("/getMethod", HotmartController.getMethod);
 
