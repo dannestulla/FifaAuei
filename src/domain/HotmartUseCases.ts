@@ -2,7 +2,7 @@ import { HotmartResponse, Item } from "../data/model/hotmart/HotmartResponse";
 
 export class HotmartUseCase {
 
-  static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): string[][] {
+  static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): number[][] {
     let salesInAMonth: number[] = []
     let salesInADay: number = 0
     let currentDay: number = firstDayOfMonth
@@ -22,10 +22,10 @@ export class HotmartUseCase {
     return twoDimensions
   }
 
-  static transformInTwoDimensions(salesInAMonth: number[]) {
+  static transformInTwoDimensions(salesInAMonth: number[]) : number[][] {
     let list = []
     for (const sale of salesInAMonth) {
-      list.push([sale.toFixed(2), ""])
+      list.push([sale, 0])
     }
     console.log("Lista: "+ list)
     console.log("numeros na lista: "+ list.length)
