@@ -52,25 +52,43 @@ export const getAuthParams = async (req: Request, next : NextFunction): Promise<
 }
 
 // Verifica quantos Método Auei foram vendidos no dia
-export const getMethod = async (req: Request,
+export const getMethodInAMonth = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req.query as any as HotmarRequest).date)
-    const response = await fetchUrl(token, dayStart, dayEnd)
-    const methodsSold = SalesUseCase.getMethodSold(response.items)
+    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
+    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
+    let listOfItems = [response.items]
+    let pageToken = response.page_info?.next_page_token
+    while (pageToken != null) {
+        const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
+        const items = lastResponse.items
+        listOfItems = listOfItems.concat(items)
+        pageToken = lastResponse.page_info?.next_page_token
+    }
+    console.log("merged response: " + listOfItems.flat())
+    const methodsSold = SalesUseCase.getMethodsInAMonth(response.items, firstDayOfMonth)
     res.send(methodsSold)
 }
 
 // Verifica quantas ESCOLA FIFA AUEI 2.0 foram vendidos no dia
-export const getSchool = async (req: Request,
+export const getSchoolInAMonth = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req as any as HotmarRequest).date)
-    const response = await fetchUrl(token, dayStart, dayEnd)
-    const schoolsSold = SalesUseCase.getSchoolsSold(response.items)
-    res.send(schoolsSold)
+    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
+    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
+    let listOfItems = [response.items]
+    let pageToken = response.page_info?.next_page_token
+    while (pageToken != null) {
+        const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
+        const items = lastResponse.items
+        listOfItems = listOfItems.concat(items)
+        pageToken = lastResponse.page_info?.next_page_token
+    }
+    console.log("merged response: " + listOfItems.flat())
+    const methodsSold = SalesUseCase.getMethodsInAMonth(response.items, firstDayOfMonth)
+    res.send(methodsSold)
 }

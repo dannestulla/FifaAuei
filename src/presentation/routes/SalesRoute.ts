@@ -6,8 +6,8 @@ router.post("/getSales", SalesController.getSalesInADay);
 
 router.post("/getSalesInAMonth", SalesController.getSalesInAMonth);
 
-router.get("/getMethod", SalesController.getMethod);
+router.get("/getMethodInAMonth", SalesController.getMethodInAMonth);
 
-router.get("/getSchool", SalesController.getSchool);
+router.get("/getSchoolInAMonth", SalesController.getSchoolInAMonth);
 
 export default router;

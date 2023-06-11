@@ -97,7 +97,49 @@ export class SalesUseCase {
     return isForeign
   }
 
-  static getMethodSold = (items: Item[]): string => {
+  static getMethodsInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
+    let methodInAMonth: number[] = []
+    let methodInADay: number = 0
+    let currentDay: number = firstDayOfMonth
+    const oneDayMilisec = 86400000
+
+    for (const item of items) {
+      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
+        if (item.product.name ==  "MÉTODO AUEI - FIFA AUEI") {
+          methodInADay++
+        }
+      } else {
+        currentDay += oneDayMilisec
+        methodInAMonth.push(methodInADay)
+        methodInADay = 0
+      }
+    }
+    const twoDimensions = this.transformInTwoDimensions(methodInAMonth)
+    return twoDimensions
+  }
+
+  static getSchoolInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
+    let methodInAMonth: number[] = []
+    let methodInADay: number = 0
+    let currentDay: number = firstDayOfMonth
+    const oneDayMilisec = 86400000
+
+    for (const item of items) {
+      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
+        if (item.product.name ==  "ESCOLA FIFA AUEI 2.0") {
+          methodInADay++
+        }
+      } else {
+        currentDay += oneDayMilisec
+        methodInAMonth.push(methodInADay)
+        methodInADay = 0
+      }
+    }
+    const twoDimensions = this.transformInTwoDimensions(methodInAMonth)
+    return twoDimensions
+  }
+
+  /*   static getMethodSold = (items: Item[]): string => {
     let methodSold = 0
     for (const itemSelected of items) {
       if (itemSelected.product.name == "MÉTODO AUEI - FIFA AUEI") {
@@ -109,7 +151,7 @@ export class SalesUseCase {
     } else {
       return methodSold.toString()
     }
-  }
+  } */
 
   static getSchoolsSold = (items: Item[]): string => {
     let schoolsSold = 0
