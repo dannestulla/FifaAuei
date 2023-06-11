@@ -26,8 +26,17 @@ export const getAdsInAMonth = async (
     const request = req.query as unknown as FacebookRequest
     const date = new Date(request.date)
     const timeRange = getAllMonth(date)
-    const adsTotal = await fetchUrl(request, timeRange)
-    const adsSpent = adsTotal as FacebookResponse
-    const listOfAds = createAdsList(adsSpent.data)
+    let response = await fetchUrl(request, timeRange)
+    
+    let listOfItems = [response.data]
+    let pageToken = response.paging?.cursors?.after
+    while(response.data.length !== 0) {
+        const lastResponse = await fetchUrl(request, timeRange, pageToken)
+        listOfItems = listOfItems.concat(lastResponse.data)
+        pageToken = lastResponse.paging?.cursors?.after
+        response = lastResponse
+    }
+    console.log("list of ads :"+ listOfItems)
+    const listOfAds = createAdsList(listOfItems.flat())
     res.send(listOfAds)
 };

@@ -11,7 +11,7 @@ export const getSalesInAMonth = async (
 ) => {
     const token = await getAuthParams(req, next)
     const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
-    let response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
+    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
 
     let listOfItems = [response.items]
     let pageToken = response.page_info?.next_page_token
