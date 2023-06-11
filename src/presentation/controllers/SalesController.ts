@@ -11,18 +11,18 @@ export const getSalesInAMonth = async (
 ) => {
     const token = await getAuthParams(req, next)
     const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
-    
     let response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
-    const responseList = [response]
+
+    let listOfItems = [response.items]
     let pageToken = response.page_info?.next_page_token
     while (pageToken != null) {
         const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
-        responseList.push(lastResponse)
+        const items = lastResponse.items
+        listOfItems = listOfItems.concat(items)
         pageToken = lastResponse.page_info?.next_page_token
-        console.log("page token: " + pageToken)
     }
-    const mergedResponse = responseList.flat()[0]
-    const listOfSales = SalesUseCase.getSalesInAMonth(mergedResponse, firstDayOfMonth)
+    console.log("merged response: " + listOfItems.flat())
+    const listOfSales = SalesUseCase.getSalesInAMonth(listOfItems.flat(), firstDayOfMonth)
     res.send(listOfSales)
 }
 

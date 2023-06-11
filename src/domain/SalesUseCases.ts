@@ -2,13 +2,13 @@ import { HotmartResponse, Item } from "../data/model/hotmart/SalesResponse";
 
 export class SalesUseCase {
 
-  static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): number[][] {
+  static getSalesInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
     let salesInAMonth: number[] = []
     let salesInADay: number = 0
     let currentDay: number = firstDayOfMonth
     const oneDayMilisec = 86400000
 
-    for (const item of response.items) {
+    for (const item of items) {
       if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
         salesInADay += this.getComission(item)
       } else {
