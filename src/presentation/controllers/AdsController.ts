@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { FacebookRequest } from '../../data/model/facebook/FacebookRequest';
-import { FacebookResponse } from '../../data/model/facebook/FacebookResponse';
-import { getAllMonth, getOneDay, createAdsList } from "../../domain/FacebookUseCases";
+import { FacebookRequest } from '../../data/model/facebook/AdsRequest';
+import { FacebookResponse } from '../../data/model/facebook/AdsResponse';
+import { getAllMonth, getOneDay, createAdsList } from "../../domain/AdsUseCases";
 import { fetchUrl } from "../../data/repository/FacebookRepository";
 
 export const getAdsInADay = async (

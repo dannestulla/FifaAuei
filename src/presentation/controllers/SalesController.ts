@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { HotmarRequest } from '../../data/model/hotmart/HotmarRequest';
-import { HotmartUseCase } from "../../domain/HotmartUseCases";
+import { HotmarRequest } from '../../data/model/hotmart/SalesRequest';
+import { SalesUseCase } from "../../domain/SalesUseCases";
 import { getToken, fetchUrl } from '../../data/repository/HotmartRepository';
+import { HotmartResponse } from '../../data/model/hotmart/SalesResponse';
 
 export const getSalesInAMonth = async (
     req: Request,
@@ -9,9 +10,19 @@ export const getSalesInAMonth = async (
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const  [firstDayOfMonth, lastDayOfMonth] = HotmartUseCase.getMonthStart((req.query as any as HotmarRequest).date)
-    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
-    const listOfSales = HotmartUseCase.getSalesInAMonth(response, firstDayOfMonth)
+    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
+    
+    let response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
+    const responseList = [response]
+    let pageToken = response.page_info?.next_page_token
+    while (pageToken != null) {
+        const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
+        responseList.push(lastResponse)
+        pageToken = lastResponse.page_info?.next_page_token
+        console.log("page token: " + pageToken)
+    }
+    const mergedResponse = responseList.flat()[0]
+    const listOfSales = SalesUseCase.getSalesInAMonth(mergedResponse, firstDayOfMonth)
     res.send(listOfSales)
 }
 
@@ -21,15 +32,15 @@ export const getSalesInADay = async (
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req.query as any as HotmarRequest).date)
+    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
-    if (HotmartUseCase.isForeignCurrency(response.items)) {
+    if (SalesUseCase.isForeignCurrency(response.items)) {
         res.send("Faça o cálculo manualmente")
         return
     }
     let daySales = 0
     for (const item of response.items) {
-        daySales += HotmartUseCase.getComission(item)
+        daySales += SalesUseCase.getComission(item)
     } 
     res.send(daySales.toString())
 };
@@ -46,9 +57,9 @@ export const getMethod = async (req: Request,
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req.query as any as HotmarRequest).date)
+    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
-    const methodsSold = HotmartUseCase.getMethodSold(response.items)
+    const methodsSold = SalesUseCase.getMethodSold(response.items)
     res.send(methodsSold)
 }
 
@@ -58,8 +69,8 @@ export const getSchool = async (req: Request,
     next: NextFunction
 ) => {
     const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = HotmartUseCase.getDayDuration((req as any as HotmarRequest).date)
+    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req as any as HotmarRequest).date)
     const response = await fetchUrl(token, dayStart, dayEnd)
-    const schoolsSold = HotmartUseCase.getSchoolsSold(response.items)
+    const schoolsSold = SalesUseCase.getSchoolsSold(response.items)
     res.send(schoolsSold)
 }

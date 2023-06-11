@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Daum } from "../data/model/facebook/FacebookResponse";
+import { Daum } from "../data/model/facebook/AdsResponse";
 
 export const getOneDay = (date: Date): string => {
     const startDate = moment(date)

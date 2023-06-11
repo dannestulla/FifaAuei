@@ -1,5 +1,5 @@
-import { FacebookRequest } from "../model/facebook/FacebookRequest";
-import { FacebookResponse } from "../model/facebook/FacebookResponse";
+import { FacebookRequest } from "../model/facebook/AdsRequest";
+import { FacebookResponse } from "../model/facebook/AdsResponse";
 import axios from 'axios';
 
 export const fetchUrl = async (request: FacebookRequest, timeRange: string): Promise<FacebookResponse> => {

@@ -1,6 +1,6 @@
-import { HotmartResponse, Item } from "../data/model/hotmart/HotmartResponse";
+import { HotmartResponse, Item } from "../data/model/hotmart/SalesResponse";
 
-export class HotmartUseCase {
+export class SalesUseCase {
 
   static getSalesInAMonth(response: HotmartResponse, firstDayOfMonth: number): number[][] {
     let salesInAMonth: number[] = []

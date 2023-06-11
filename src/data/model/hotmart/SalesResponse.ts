@@ -1,5 +1,12 @@
 export interface HotmartResponse {
     items: Item[]
+    page_info?: PageInfo
+  }
+
+  export interface PageInfo {
+    results_per_page: number,
+    total_results: number,
+    next_page_token: string
   }
   
   export interface Item {
