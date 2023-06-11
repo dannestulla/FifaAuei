@@ -22,14 +22,14 @@ export class SalesUseCase {
     return twoDimensions
   }
 
-  static transformInTwoDimensions(salesInAMonth: number[]) : number[][] {
-    let list = []
-    for (const sale of salesInAMonth) {
-      list.push([sale, 0])
+  static transformInTwoDimensions(list: number[]) : number[][] {
+    let matrix = []
+    for (const sale of list) {
+      matrix.push([sale, 0])
     }
     console.log("Lista: "+ list)
     console.log("numeros na lista: "+ list.length)
-    return list
+    return matrix
   }
 
   static getComission = (item: Item): number => {
@@ -68,7 +68,6 @@ export class SalesUseCase {
     let hotmartValue = (hotmartTax * amountWithoutInterest) + 1
     let comissionValue = amountWithoutInterest - hotmartValue - serviceValue
 
-    //    return comissionValue.toFixed(2).replace(".", ",")
     return comissionValue
   }
 
@@ -119,51 +118,23 @@ export class SalesUseCase {
   }
 
   static getSchoolInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
-    let methodInAMonth: number[] = []
-    let methodInADay: number = 0
+    let schoolInAMonth: number[] = []
+    let schoolInADay: number = 0
     let currentDay: number = firstDayOfMonth
     const oneDayMilisec = 86400000
 
     for (const item of items) {
       if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
         if (item.product.name ==  "ESCOLA FIFA AUEI 2.0") {
-          methodInADay++
+          schoolInADay++
         }
       } else {
         currentDay += oneDayMilisec
-        methodInAMonth.push(methodInADay)
-        methodInADay = 0
+        schoolInAMonth.push(schoolInADay)
+        schoolInADay = 0
       }
     }
-    const twoDimensions = this.transformInTwoDimensions(methodInAMonth)
+    const twoDimensions = this.transformInTwoDimensions(schoolInAMonth)
     return twoDimensions
-  }
-
-  /*   static getMethodSold = (items: Item[]): string => {
-    let methodSold = 0
-    for (const itemSelected of items) {
-      if (itemSelected.product.name == "MÉTODO AUEI - FIFA AUEI") {
-        methodSold++
-      }
-    }
-    if (methodSold == 0) {
-      return ""
-    } else {
-      return methodSold.toString()
-    }
-  } */
-
-  static getSchoolsSold = (items: Item[]): string => {
-    let schoolsSold = 0
-    for (const itemSelected of items) {
-      if (itemSelected.product.name == "ESCOLA FIFA AUEI 2.0") {
-        schoolsSold++
-      }
-    }
-    if (schoolsSold == 0) {
-      return ""
-    } else {
-      return schoolsSold.toString()
-    }
   }
 }

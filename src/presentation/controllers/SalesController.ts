@@ -2,17 +2,22 @@ import { Request, Response, NextFunction } from 'express';
 import { HotmarRequest } from '../../data/model/hotmart/SalesRequest';
 import { SalesUseCase } from "../../domain/SalesUseCases";
 import { getToken, fetchUrl } from '../../data/repository/HotmartRepository';
-import { HotmartResponse } from '../../data/model/hotmart/SalesResponse';
+import { HotmartResponse, Item } from '../../data/model/hotmart/SalesResponse';
 
 export const getSalesInAMonth = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
+    const [response, firstDayOfMonth] = await getResponse(req, next)
+    const listOfSales = SalesUseCase.getSalesInAMonth(response, firstDayOfMonth)
+    res.send(listOfSales)
+}
+
+const getResponse = async(req: Request, next: NextFunction) : Promise<[Item[], number]>=> {
     const token = await getAuthParams(req, next)
     const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
-
     let listOfItems = [response.items]
     let pageToken = response.page_info?.next_page_token
     while (pageToken != null) {
@@ -22,8 +27,7 @@ export const getSalesInAMonth = async (
         pageToken = lastResponse.page_info?.next_page_token
     }
     console.log("merged response: " + listOfItems.flat())
-    const listOfSales = SalesUseCase.getSalesInAMonth(listOfItems.flat(), firstDayOfMonth)
-    res.send(listOfSales)
+    return [response.items, firstDayOfMonth]
 }
 
 export const getSalesInADay = async (
@@ -45,7 +49,7 @@ export const getSalesInADay = async (
     res.send(daySales.toString())
 };
 
-export const getAuthParams = async (req: Request, next : NextFunction): Promise<string> => {
+const getAuthParams = async (req: Request, next : NextFunction): Promise<string> => {
     const request = req.query as any as HotmarRequest
     const token = (await getToken(request, next)).access_token
     return token
@@ -56,19 +60,8 @@ export const getMethodInAMonth = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const token = await getAuthParams(req, next)
-    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
-    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
-    let listOfItems = [response.items]
-    let pageToken = response.page_info?.next_page_token
-    while (pageToken != null) {
-        const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
-        const items = lastResponse.items
-        listOfItems = listOfItems.concat(items)
-        pageToken = lastResponse.page_info?.next_page_token
-    }
-    console.log("merged response: " + listOfItems.flat())
-    const methodsSold = SalesUseCase.getMethodsInAMonth(response.items, firstDayOfMonth)
+    const [response, firstDayOfMonth] = await getResponse(req, next)
+    const methodsSold = SalesUseCase.getMethodsInAMonth(response, firstDayOfMonth)
     res.send(methodsSold)
 }
 
@@ -77,18 +70,7 @@ export const getSchoolInAMonth = async (req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const token = await getAuthParams(req, next)
-    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
-    const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
-    let listOfItems = [response.items]
-    let pageToken = response.page_info?.next_page_token
-    while (pageToken != null) {
-        const lastResponse = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth, pageToken) 
-        const items = lastResponse.items
-        listOfItems = listOfItems.concat(items)
-        pageToken = lastResponse.page_info?.next_page_token
-    }
-    console.log("merged response: " + listOfItems.flat())
-    const methodsSold = SalesUseCase.getMethodsInAMonth(response.items, firstDayOfMonth)
-    res.send(methodsSold)
+    const [response, firstDayOfMonth] = await getResponse(req, next)
+    const schoolSold = SalesUseCase.getSchoolInAMonth(response, firstDayOfMonth)
+    res.send(schoolSold)
 }

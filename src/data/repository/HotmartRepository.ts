@@ -1,5 +1,4 @@
 import { NextFunction } from "express";
-import { getAuthParams } from "../../presentation/controllers/SalesController";
 import { HotmarRequest } from "../model/hotmart/SalesRequest";
 import { HotmartResponse } from "../model/hotmart/SalesResponse";
 import { HotmartToken } from "../model/hotmart/SalesToken";
