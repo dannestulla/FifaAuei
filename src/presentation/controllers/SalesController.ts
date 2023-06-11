@@ -16,7 +16,7 @@ export const getSalesInAMonth = async (
 
 const getResponse = async(req: Request, next: NextFunction) : Promise<[Item[], number]>=> {
     const token = await getAuthParams(req, next)
-    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthStart((req.query as any as HotmarRequest).date)
+    const  [firstDayOfMonth, lastDayOfMonth] = SalesUseCase.getMonthDuration((req.query as any as HotmarRequest).date)
     const response = await fetchUrl(token, firstDayOfMonth, lastDayOfMonth)
     let listOfItems = [response.items]
     let pageToken = response.page_info?.next_page_token
@@ -26,8 +26,8 @@ const getResponse = async(req: Request, next: NextFunction) : Promise<[Item[], n
         listOfItems = listOfItems.concat(items)
         pageToken = lastResponse.page_info?.next_page_token
     }
-    console.log("merged response: " + listOfItems.flat())
-    return [response.items, firstDayOfMonth]
+    console.log("response size: "+ listOfItems.length)
+    return [listOfItems.flat(), firstDayOfMonth]
 }
 
 export const getSalesInADay = async (

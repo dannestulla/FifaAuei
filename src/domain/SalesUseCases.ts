@@ -1,3 +1,4 @@
+import moment from "moment";
 import { HotmartResponse, Item } from "../data/model/hotmart/SalesResponse";
 
 export class SalesUseCase {
@@ -7,18 +8,72 @@ export class SalesUseCase {
     let salesInADay: number = 0
     let currentDay: number = firstDayOfMonth
     const oneDayMilisec = 86400000
-
+    let diaAtual = this.getDateDay(firstDayOfMonth)
     for (const item of items) {
-      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
+      const currentOrderDate = item.purchase.order_date
+      console.log("order_date da api :" + this.getDateDay(currentOrderDate))
+      if (this.getDateDay(item.purchase.order_date) <= diaAtual) {
         salesInADay += this.getComission(item)
       } else {
         currentDay += oneDayMilisec
         salesInAMonth.push(salesInADay)
         salesInADay = 0
         salesInADay += this.getComission(item)
+        diaAtual = this.getDateDay(item.purchase.order_date)
+        console.log("currentDay alterado para:" + diaAtual)
+        if ((salesInAMonth.length + 1) != this.getDateDay(currentOrderDate)) {
+          salesInAMonth.push(0)
+        }
       }
     }
     const twoDimensions = this.transformInTwoDimensions(salesInAMonth)
+    return twoDimensions
+  }
+
+  static getDateDay(date : number) : number {
+    const rawdate = new Date(date)
+    return rawdate.getDate()
+  }
+
+  static getMethodsInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
+    let methodInAMonth: number[] = []
+    let methodInADay: number = 0
+    let currentDay: number = firstDayOfMonth
+    const oneDayMilisec = 86400000
+    
+    for (const item of items) {
+      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
+        if (item.product.name == "MÉTODO AUEI - FIFA AUEI") {
+          methodInADay++
+        }
+      } else {
+        currentDay += oneDayMilisec
+        methodInAMonth.push(methodInADay)
+        methodInADay = 0
+      }
+    }
+    const twoDimensions = this.transformInTwoDimensions(methodInAMonth)
+    return twoDimensions
+  }
+
+  static getSchoolInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
+    let schoolInAMonth: number[] = []
+    let schoolInADay: number = 0
+    let currentDay: number = firstDayOfMonth
+    const oneDayMilisec = 86400000
+
+    for (const item of items) {
+      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
+        if (item.product.name == "ESCOLA FIFA AUEI 2.0") {
+          schoolInADay++
+        }
+      } else {
+        currentDay += oneDayMilisec
+        schoolInAMonth.push(schoolInADay)
+        schoolInADay = 0
+      }
+    }
+    const twoDimensions = this.transformInTwoDimensions(schoolInAMonth)
     return twoDimensions
   }
 
@@ -71,7 +126,7 @@ export class SalesUseCase {
     return comissionValue
   }
 
-  static getMonthStart(date: Date): [number, number] {
+  static getMonthDuration(date: Date): [number, number] {
     const today = new Date(date);
     const firstDayOfMonth = (new Date(today.setDate(1)).getTime())
     const lastDayOfMonth = (new Date(today.getFullYear(), today.getMonth() + 1, 0)).getTime();
@@ -96,45 +151,4 @@ export class SalesUseCase {
     return isForeign
   }
 
-  static getMethodsInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
-    let methodInAMonth: number[] = []
-    let methodInADay: number = 0
-    let currentDay: number = firstDayOfMonth
-    const oneDayMilisec = 86400000
-
-    for (const item of items) {
-      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
-        if (item.product.name ==  "MÉTODO AUEI - FIFA AUEI") {
-          methodInADay++
-        }
-      } else {
-        currentDay += oneDayMilisec
-        methodInAMonth.push(methodInADay)
-        methodInADay = 0
-      }
-    }
-    const twoDimensions = this.transformInTwoDimensions(methodInAMonth)
-    return twoDimensions
-  }
-
-  static getSchoolInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
-    let schoolInAMonth: number[] = []
-    let schoolInADay: number = 0
-    let currentDay: number = firstDayOfMonth
-    const oneDayMilisec = 86400000
-
-    for (const item of items) {
-      if (item.purchase.order_date <= (currentDay + oneDayMilisec)) {
-        if (item.product.name ==  "ESCOLA FIFA AUEI 2.0") {
-          schoolInADay++
-        }
-      } else {
-        currentDay += oneDayMilisec
-        schoolInAMonth.push(schoolInADay)
-        schoolInADay = 0
-      }
-    }
-    const twoDimensions = this.transformInTwoDimensions(schoolInAMonth)
-    return twoDimensions
-  }
 }

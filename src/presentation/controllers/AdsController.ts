@@ -36,7 +36,6 @@ export const getAdsInAMonth = async (
         pageToken = lastResponse.paging?.cursors?.after
         response = lastResponse
     }
-    console.log("list of ads :"+ listOfItems)
     const listOfAds = createAdsList(listOfItems.flat())
     res.send(listOfAds)
 };
