@@ -1,6 +1,6 @@
 export interface FacebookResponse {
     data: Daum[]
-    paging: Paging
+    paging?: Paging
   }
   
   export interface Daum {
