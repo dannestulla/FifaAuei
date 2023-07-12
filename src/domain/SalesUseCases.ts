@@ -1,30 +1,27 @@
-import moment from "moment";
-import { HotmartResponse, Item } from "../data/model/hotmart/SalesResponse";
+import { Item } from "../data/model/hotmart/SalesResponse";
 
 export class SalesUseCase {
 
-  static getSalesInAMonth(items: Item[], firstDayOfMonth: number): number[][] {
+  static getSalesInAMonth(items: Item[]): number[][] {
     let salesInAMonth: number[] = []
     let salesInADay: number = 0
-    let currentDay: number = firstDayOfMonth
-    const oneDayMilisec = 86400000
-    let diaAtual = this.getDateDay(firstDayOfMonth)
+    let diaAtual = 1
     for (const item of items) {
       const currentOrderDate = item.purchase.order_date
       console.log("order_date da api :" + this.getDateDay(currentOrderDate))
       if (this.getDateDay(item.purchase.order_date) <= diaAtual) {
         salesInADay += this.getComission(item)
-      } else {
-        currentDay += oneDayMilisec
-        salesInAMonth.push(salesInADay)
-        salesInADay = 0
-        salesInADay += this.getComission(item)
-        diaAtual = this.getDateDay(item.purchase.order_date)
-        console.log("currentDay alterado para:" + diaAtual)
         if ((salesInAMonth.length + 1) != this.getDateDay(currentOrderDate)) {
           salesInAMonth.push(0)
         }
+      } else {
+        salesInAMonth.push(salesInADay)
+        salesInADay = 0
+        salesInADay += this.getComission(item)
+       
       }
+      console.log("currentDay alterado para:" + diaAtual)
+      diaAtual = this.getDateDay(item.purchase.order_date)
     }
     const twoDimensions = this.transformInTwoDimensions(salesInAMonth)
     return twoDimensions
@@ -82,8 +79,10 @@ export class SalesUseCase {
     for (const sale of list) {
       matrix.push([sale, 0])
     }
-    console.log("Lista: "+ list)
-    console.log("numeros na lista: "+ list.length)
+    console.log("tamanho da lista: "+ list.length)
+    for (const number of list) {
+      console.log("numeros na lista: "+ number)
+    }
     return matrix
   }
 

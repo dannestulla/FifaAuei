@@ -2,15 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import { HotmarRequest } from '../../data/model/hotmart/SalesRequest';
 import { SalesUseCase } from "../../domain/SalesUseCases";
 import { getToken, fetchUrl } from '../../data/repository/HotmartRepository';
-import { HotmartResponse, Item } from '../../data/model/hotmart/SalesResponse';
+import { Item } from '../../data/model/hotmart/SalesResponse';
 
 export const getSalesInAMonth = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const [response, firstDayOfMonth] = await getResponse(req, next)
-    const listOfSales = SalesUseCase.getSalesInAMonth(response, firstDayOfMonth)
+    const [response] = await getResponse(req, next)
+    const listOfSales = SalesUseCase.getSalesInAMonth(response)
     res.send(listOfSales)
 }
 
@@ -29,25 +29,6 @@ const getResponse = async(req: Request, next: NextFunction) : Promise<[Item[], n
     console.log("response size: "+ listOfItems.length)
     return [listOfItems.flat(), firstDayOfMonth]
 }
-
-export const getSalesInADay = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    const token = await getAuthParams(req, next)
-    const [dayStart, dayEnd] = SalesUseCase.getDayDuration((req.query as any as HotmarRequest).date)
-    const response = await fetchUrl(token, dayStart, dayEnd)
-    if (SalesUseCase.isForeignCurrency(response.items)) {
-        res.send("Faça o cálculo manualmente")
-        return
-    }
-    let daySales = 0
-    for (const item of response.items) {
-        daySales += SalesUseCase.getComission(item)
-    } 
-    res.send(daySales.toString())
-};
 
 const getAuthParams = async (req: Request, next : NextFunction): Promise<string> => {
     const request = req.query as any as HotmarRequest
